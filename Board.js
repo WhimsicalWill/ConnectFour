@@ -1,4 +1,4 @@
-//We will be moving the ball's graphics position, and we don't want other things to be affected.
+//boardGraphics is for static graphics, ballGraphics is for dynamic graphics
 var boardGraphics, ballGraphics;
 var boardHeight = pieceLength * 6;
 var boardWidth = pieceLength * 7;
@@ -11,6 +11,7 @@ var pieceDroppedY = pieceLength / 2;
 var red = 0xFF0000;
 var yellow = 0xFFFF00;
 
+//Create the empty board array (6x7) 
 var board = [[" ", " ", " ", " ", " ", " ", " "],
              [" ", " ", " ", " ", " ", " ", " "],
              [" ", " ", " ", " ", " ", " ", " "],
@@ -20,6 +21,7 @@ var board = [[" ", " ", " ", " ", " ", " ", " "],
 
 //Draw the grid lines of the board, and set properties of some graphics objects.
 function drawBoard() {
+    //Set the phaser background color to white  
     game.stage.backgroundColor = 0xffffff;
     boardGraphics = game.add.graphics(0, 0);
     
@@ -27,6 +29,8 @@ function drawBoard() {
     if (!isGameOver)
         ballGraphics = game.add.graphics(boardWidth / 2, pieceLength / 2);
     isGameOver = false;
+    
+    //set the line thickness and color
     boardGraphics.lineStyle(1.5, 0x000000);
     
     //Drawing the Vertical Lines
@@ -49,14 +53,13 @@ function drawBoard() {
         boardGraphics.moveTo(0, y + pieceLength);
         boardGraphics.lineTo(boardWidth, y + pieceLength);
     }
-    
-    setColor(yellow);
 }
 //Changes the circle that the player / ai is dropping into the board's color
 function setColor(color) {
-    //Draws a white circle in order to make the space blank
+    //Clear the ballGraphics
     ballGraphics.clear();
     
+    //Draw a circle of a given color in the spot of the old circle
     ballGraphics.lineStyle(1.5, 0x000000);
     ballGraphics.beginFill(color, 0.5);
     ballGraphics.drawCircle(0, 0, pieceLength);
@@ -79,18 +82,20 @@ function movePieceLeft() {
         ballGraphics.position.x -= pieceLength;
 }
 
-//pieceX is can be 0 for human turn, it will be set in this code
+//pieceX can be 0 for human turn, it will be set in this code
 function dropPiece(pieceY, pieceX) {
+    //If it is our turn, set pieceX to the slot the ball Graphics is hovering over
     if (playerTurn) 
         var pieceX = Math.floor(ballGraphics.position.x / pieceLength); 
-    else 
-        ballGraphics.position.x = pieceX * pieceLength + pieceLength / 2;
     
+    //This handles collision detection; if pieceY is not lower then the bottom row, and the given pieceY is not in a full slot,
+    //set the y position of ballGraphics to pieceY
     if (Math.ceil((pieceY - pieceLength * 1.5) / pieceLength) < 6 && board[Math.ceil((pieceY - pieceLength * 1.5) / pieceLength)][pieceX] == " ")
         ballGraphics.position.y = pieceY;
+    //If a collision is detected, set the move to be final in the non-moving boardGraphics and reset some variables
     else {
         pieceDropped = false;
-        pieceDroppedY = 0;
+        pieceDroppedY = pieceLength / 2;
         makeMove((ballGraphics.position.x - pieceLength / 2) / pieceLength, Math.floor((pieceY - pieceLength) / pieceLength));
         
         //If the game is over, we want the ball to be offscreen (don't reset pos)
@@ -110,6 +115,7 @@ function isColumnEmpty(board, x) {
     return false;
 }
 
+//resets graphics, text, and playerTurn
 function resetBoard() {
     clearBoard();
     boardGraphics.clear();
@@ -120,6 +126,7 @@ function resetBoard() {
     playerTurn = false;
 }
 
+//Sets all of the board's slots to empty
 function clearBoard() {
     for (var x = 0; x < 7; x++) {
         for (var y = 0; y < 6; y++) {
@@ -147,20 +154,22 @@ function makeMove(x, y) {
     boardGraphics.drawCircle(x * pieceLength + pieceLength / 2, (y + 1) * pieceLength + pieceLength / 2, pieceLength);
     boardGraphics.endFill();
     
-    //Check for wins based off of the move we just made 
-    console.log("pos: " + ballGraphics.position.y);
+    //Check for wins or ties based off of the move we just made
     if (checkForWin(board, x, y, type)) 
         gameOver(type);
     if (isFull(board)) {
         gameOver("tie");  
     }
+    //Invert the playerTurn variable
     playerTurn = !playerTurn;
 }
 
+//sets a move using a given board, coordinates, and a type("r", "y", or " ")
 function setMove(board, x, y, type) {
     board[y][x] = type;
 }
 
+//Checks for four in a rows
 function checkForWin(board, x, y, type) {
     //Gets the x coordinate of the last move and checks that column for a win
     for (var i = 0, j = 1; i < 6; i++, j++) {
@@ -253,6 +262,7 @@ function checkForWin(board, x, y, type) {
 }
 
 function gameOver(type) {
+    //places the ball for choosing a move off the visible screen
     ballGraphics.position.y = -500;
     switch (type) {
         case "r":
@@ -267,12 +277,14 @@ function gameOver(type) {
     isGameOver = true;
 }
 
+//A sleep method which waits a given amount of ms and then returns
 function sleep(milliseconds) {
     console.log("sleep");
     var start = new Date().getTime();
     while ((new Date().getTime() - start) < milliseconds);
 }
 
+//This function returns a board that is identical to the given board
 function copyBoard(board) {
     var boardCopy = [[" ", " ", " ", " ", " ", " ", " "],
              [" ", " ", " ", " ", " ", " ", " "],
