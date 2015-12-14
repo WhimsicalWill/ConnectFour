@@ -4,10 +4,6 @@ var pieceLength = Math.floor(gameHeight / 7);
 //Make a new phaser game, with which we can draw graphics onto
 var game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '', {preload: preload, create: create, update: update});
 
-function preload() {
-    
-}
-
 function create() {
     //Center the phaser game
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
