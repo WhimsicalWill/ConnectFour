@@ -2,11 +2,7 @@ var gameHeight = gameWidth = 660;
 //The diameter of an indivual connect four piece
 var pieceLength = Math.floor(gameHeight / 7);
 //Make a new phaser game, with which we can draw graphics onto
-var game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '', {preload: preload, create: create, update: update});
-
-function preload() {
-    
-}
+var game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '', {create: create, update: update});
 
 function create() {
     //Center the phaser game
