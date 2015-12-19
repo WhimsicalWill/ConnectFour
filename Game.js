@@ -3,6 +3,7 @@ var gameHeight = gameWidth = 660;
 var pieceLength = Math.floor(gameHeight / 7);
 //Make a new phaser game, with which we can draw graphics onto
 var game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '', {create: create, update: update});
+var touchX;
 
 function create() {
     console.log("version 1.337");
@@ -30,9 +31,14 @@ function create() {
 //the update method is called every frame
 function update() {
     //If we are touching a mobile phone screen
-    if (game.input.pointer1.isDown) {
+    if (game.input.pointer1.onDown) {
+        MAX_DEPTH = 6;
         setPieceDropped();   
     }   
+    
+    if (game.input.pointer1.isHold) {
+        movePieceLeft();
+    }
         
     //If pieceDropped is true, then call the dropPiece method so we can animate the dropping of a piece
     if (pieceDropped) {

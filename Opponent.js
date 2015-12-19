@@ -1,3 +1,6 @@
+//MAX_DEPTH is how many moves into the future the algorithm will search
+MAX_DEPTH = 7;
+
 //given an array of moves, this function returns a random move
 function randomMove(posMoves) {
     var rand = Math.floor(Math.random() * posMoves.length);
@@ -8,8 +11,6 @@ function randomMove(posMoves) {
 function buildTree(board, x, y, playerTurn) {
     var currPlayer = playerTurn == true ? "y" : "r";
     var value;
-    //MAX_DEPTH is how many moves into the future the algorithm will search
-    MAX_DEPTH = 7;
     bestMove = [];
     
     //On the first move, the ai will always return the middle spot, to reduce lag when loading website, we are hardcoding this
