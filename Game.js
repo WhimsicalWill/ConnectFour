@@ -28,6 +28,11 @@ function create() {
 
 //the update method is called every frame
 function update() {
+    //If we are touching a mobile phone screen
+    if (game.input.pointer1.isDown) {
+        setPieceDropped();   
+    }   
+        
     //If pieceDropped is true, then call the dropPiece method so we can animate the dropping of a piece
     if (pieceDropped) {
         //Add an eighth of pieceLength to the y position of the piece, for a smooth animation
