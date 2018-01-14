@@ -5,6 +5,7 @@ var pieceLength = Math.floor(gameHeight / 7);
 var game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '', {create: create, update: update});
 
 function create() {
+    alert("Use arrowkeys to move between slots and space to drop the piece");
     //Center the phaser game
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     this.scale.pageAlignHorizontally = true;
